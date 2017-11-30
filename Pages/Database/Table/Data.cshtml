@@ -1,0 +1,117 @@
+﻿@page
+@model Database.Table.Data
+
+@{
+    Layout = "_DatabaseLayout";
+    ViewData["Page"] = "Table Data";
+    ViewData["Database"] = Model.DatabaseName;
+    ViewData["Table"] = Model.TableName;
+    var lastPage = (Model.TotalDataCount + Model.DataLimit - 1) / Model.DataLimit;
+}
+
+@if (Model.DataListResult != null)
+{
+    <div class="scrolled-table">
+        <table class="table is-striped is-hoverable is-fullwidth is-narrow">
+            <thead>
+                <tr>
+                    @foreach (var column in Model.DataListResult?.ColumnList)
+                    {
+                        <th>@column.Field</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var row in Model.DataListResult?.DataList)
+            {
+                <tr>
+                    @foreach (var column in Model.DataListResult?.ColumnList)
+                    {
+                        if (column.ForeignKeyResult != null)
+                        {
+                            <td>
+                                <a asp-page="./Data"
+                                   asp-route-database="@Model.DatabaseName"
+                                   asp-route-tableName="@column.ForeignKeyResult.ReferencedTableName"
+                                   >
+                                    @row[column.Field]
+                                </a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@row[column.Field]</td>
+                        }
+                    }
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}
+<nav class="pagination" role="navigation" aria-label="pagination">
+    <a class="pagination-previous"
+       asp-page="./Data"
+       asp-route-database="@Model.DatabaseName"
+       asp-route-tableName="@Model.TableName"
+       asp-route-dataPage="@(Model.DataPage - 1)">
+        <span aria-hidden="true">Previous</span>
+    </a>
+    <a class="pagination-next"
+       asp-page="./Data"
+       asp-route-database="@Model.DatabaseName"
+       asp-route-tableName="@Model.TableName"
+       asp-route-dataPage="@(Model.DataPage + 1)">
+        <span aria-hidden="true">Next</span>
+    </a>
+    <ul class="pagination-list">
+        
+        @if (Model.DataPage > 1)
+        {
+            <li>
+                <a class="pagination-link"
+                   asp-page="./Data"
+                   asp-route-database="@Model.DatabaseName"
+                   asp-route-tableName="@Model.TableName"
+                   asp-route-dataPage="@(Model.DataPage - 1)">
+                    <span aria-hidden="true">@(Model.DataPage - 1)</span>
+                </a>
+            </li>
+        }
+        
+        <li>
+            <a class="pagination-link is-current"
+               asp-page="./Data"
+               asp-route-database="@Model.DatabaseName"
+               asp-route-tableName="@Model.TableName"
+               asp-route-dataPage="@Model.DataPage">
+                <span aria-hidden="true">@Model.DataPage</span>
+            </a>
+        </li>
+        
+        @if (Model.DataPage > 0)
+        {
+            <li>
+                <a class="pagination-link"
+                   asp-page="./Data"
+                   asp-route-database="@Model.DatabaseName"
+                   asp-route-tableName="@Model.TableName"
+                   asp-route-dataPage="@(Model.DataPage + 1)">
+                    <span aria-hidden="true">@(Model.DataPage + 1)</span>
+                </a>
+            </li>
+        }
+        @if (lastPage > Model.DataPage + 1)
+        {
+            <li>
+                <a class="pagination-link"
+                   asp-page="./Data"
+                   asp-route-database="@Model.DatabaseName"
+                   asp-route-tableName="@Model.TableName"
+                   asp-route-dataPage="@lastPage">
+                    <span aria-hidden="true">@lastPage</span>
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

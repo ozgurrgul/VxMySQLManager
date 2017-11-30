@@ -1,0 +1,26 @@
+@{
+    Layout = "_Layout";
+}
+
+<vc:database-layout-tabs></vc:database-layout-tabs>
+
+@if (ViewData["NotInCard"] == null)
+{
+    <div class="card" style="margin-top: 20px;">
+        <header class="card-header">
+            <p class="card-header-title">
+                @ViewData["Page"]
+            </p>
+        </header>
+        <div class="card-content" style="">
+            @RenderBody()
+        </div>
+    </div>
+}
+else
+{
+    <div style="margin-top: 20px;">
+        @RenderBody()
+    </div>
+}
+

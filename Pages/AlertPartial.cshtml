@@ -1,0 +1,26 @@
+﻿@using VxMySQLManager.Pages
+@model VxMySQLManager.Pages.AlertPartialViewModel
+
+
+@if (Model.ErrorMessage != null)
+{
+    <div class="notification is-danger" >
+        @Model.ErrorMessage
+    </div>
+}
+
+@if (Model.SuccessMessage != null)
+{
+    <div class="notification is-success">
+        @Model.SuccessMessage
+    </div>
+}
+
+@if (Model.ExecutedSql != null)
+{
+    <div class="notification is-info">
+        Executed Sql: <br/>
+        @Model.ExecutedSql
+    </div>
+}
+

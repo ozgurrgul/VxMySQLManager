@@ -1,0 +1,74 @@
+@page
+@model Database.RunSql
+
+@{
+    Layout = "_DatabaseLayout";
+    ViewData["Page"] = "Run SQL";
+    ViewData["Database"] = Model.DatabaseName;
+}
+
+<form method="get">
+    <div class="field">
+        <div class="control">
+            <textarea class="textarea is-primary" 
+                        asp-for="@Model.SqlQuery"
+                        name="sqlQuery"
+                        type="text" 
+                        placeholder="Primary textarea"></textarea>
+            <input type="hidden" name="database" value="@Model.DatabaseName"/>
+        </div>
+    </div>
+    
+    <div class="field is-grouped">
+        <div class="control">
+            <button class="button is-success is-small" type="submit">
+                RUN
+            </button>
+        </div>
+        <div class="control">
+            <button class="button is-small" type="reset">
+                Reset
+            </button>
+        </div>
+    </div>
+</form>
+
+@if (Model.DataListResult != null)
+{
+    <div class="scrolled-table">
+        <table class="table is-striped is-hoverable is-fullwidth is-narrow">
+            <thead>
+            <tr>
+                @foreach (var column in Model.DataListResult?.ColumnList)
+                {
+                    <th>@column.Field</th>
+                }
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var row in Model.DataListResult?.DataList)
+            {
+                <tr>
+                    @foreach (var column in Model.DataListResult?.ColumnList)
+                    {
+                        if (column.ForeignKeyResult != null)
+                        {
+                            <td>
+                                <a asp-page="./Table/Data"
+                                   asp-route-database="@Model.DatabaseName"
+                                   asp-route-tableName="@column.ForeignKeyResult.ReferencedTableName">
+                                    @row[column.Field]
+                                </a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@row[column.Field]</td>
+                        }
+                    }
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

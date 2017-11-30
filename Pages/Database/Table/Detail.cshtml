@@ -1,0 +1,32 @@
+﻿@page
+@model Database.Table.Detail
+
+@{
+    Layout = "_DatabaseLayout";
+    ViewData["Page"] = "Table Detail";
+    ViewData["Database"] = Model.DatabaseName;
+    ViewData["Table"] = Model.TableName;
+}
+
+Create table syntax:
+
+<pre>
+    <code>
+@Model.CreateTableString
+    </code>
+</pre>
+
+<hr>
+
+<form method="post">
+    <button class="button is-danger is-small is-outlined"
+            data-confirm="Are you sure to drop table?"
+            asp-page-handler="droptable"
+            asp-route-database="@Model.DatabaseName"
+            asp-route-tableName="@Model.TableName">
+        <span class="icon is-small">
+            <i class="fa fa-remove"></i>
+        </span>
+        <span>Drop Table</span>
+    </button>
+</form>

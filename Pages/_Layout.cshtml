@@ -1,0 +1,126 @@
+@using VxMySQLManager.Pages
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>@ViewData["Page"]</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.css" />
+    <style>
+        
+        html {
+            font-size: 15px !important;
+            overflow-x: scroll !important;
+        }
+        
+         .field-validation-error {
+             color: #b94a48;
+         }
+
+        .field-validation-valid {
+            display: none;
+        }
+
+        input.input-validation-error {
+            border: 1px solid #b94a48;
+        }
+
+
+        select.input-validation-error {
+            border: 1px solid #b94a48;
+        }
+
+        input[type="checkbox"].input-validation-error {
+            border: 0 none;
+        }
+
+        .validation-summary-errors {
+            color: #b94a48;
+        }
+
+        .validation-summary-valid {
+            display: none;
+        }
+        
+        .scrolled-table {
+            overflow-x: scroll !important;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <strong>Vx</strong>MySQL<strong>Manager</strong>
+        </a>
+    </div>
+    <nav class="breadcrumb has-arrow-separator " aria-label="breadcrumbs">
+        <ul>
+            <li>
+                <a href="/">Index</a>
+            </li>
+
+            @if (ViewData["Database"] != null)
+            {
+                
+                <li>
+                    <a href="/Database/Detail?database=@ViewData["Database"]">
+                        @ViewData["Database"]
+                    </a>
+                </li>
+                
+                if (ViewData["Table"] != null)
+                 {
+                     <li>
+                         <a href="/Database/Table/Structure?database=@ViewData["Database"]&tableName=@ViewData["Table"]">
+                             @ViewData["Table"]
+                         </a>
+                     </li>
+                 }
+
+                if (ViewData["Page"] != null)
+                {
+                    <li class="is-active">
+                        <a>@ViewData["Page"]</a>
+                    </li>
+                }
+            }
+            else
+            {
+                if (ViewData["Page"] != null)
+                {
+                    <li class="is-active">
+                        <a>@ViewData["Page"]</a>
+                    </li>
+                }
+            }
+        </ul>
+    </nav>
+</nav>
+<div style="padding: 10px;">
+    <div style="width: 200px; float: left;">
+        <vc:database-list></vc:database-list>
+    </div>
+    <div style="width: 1000px; float: left; margin-left: 20px;">
+        @Html.Partial("AlertPartial", new AlertPartialViewModel
+        {
+            ErrorMessage = Model.ErrorMessage,
+            SuccessMessage = Model.SuccessMessage,
+            ExecutedSql = Model.ExecutedSql
+        })
+        
+        @RenderBody()
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $('[data-confirm]').click(function(e) {
+            if (!confirm($(this).attr("data-confirm"))) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
+</body>
+</html>

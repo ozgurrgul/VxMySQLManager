@@ -1,0 +1,38 @@
+﻿@model object
+
+@{
+    var selectedDatabase = Context.Request.Query["database"];
+}
+@functions
+{
+    public string GetClassForRoute(string route)
+    {
+        var selectedRoute = Context.Request.Path;
+        var className = "navbar-item is-tab";
+
+        if (selectedRoute == route)
+        {
+            className = "navbar-item is-tab is-active";
+        }
+
+        return className;
+    }
+}
+<nav class="navbar has-shadow">
+    <div class="container">
+        <div class="navbar-tabs">
+            <a class="@GetClassForRoute("/Database/Detail")" href="/Database/Detail?database=@selectedDatabase">
+                Database Detail
+            </a>
+            <a class="@GetClassForRoute("/Database/CreateTable")" href="/Database/CreateTable?database=@selectedDatabase">
+                Create Table
+            </a>
+            <a class="@GetClassForRoute("/Database/RunSql")" href="/Database/RunSql?database=@selectedDatabase">
+                Run SQL
+            </a>
+            <a class="@GetClassForRoute("/Database/Settings")" href="/Database/Settings?database=@selectedDatabase">
+                Settings
+            </a>
+        </div>
+    </div>
+</nav>

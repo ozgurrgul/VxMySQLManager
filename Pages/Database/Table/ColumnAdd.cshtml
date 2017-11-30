@@ -1,0 +1,167 @@
+﻿@page
+@using VxEntityManager.Columns
+@model Database.Table.ColumnAdd
+
+@{
+    Layout = "_DatabaseLayout";
+    ViewData["Page"] = "Add Column";
+    ViewData["Database"] = Model.DatabaseName;
+    ViewData["Table"] = Model.TableName;
+}
+
+<script>
+    $(document).ready(function() {
+
+        hideAllInputs();
+        var dataTypeSelectInput = $("#column-data-type-select");
+        //dataTypeSelectInput.trigger('change');
+    
+        console.log(new Date())
+        
+        dataTypeSelectInput.change(function(e) {
+            var dataType = this.value;
+
+            hideAllInputs();
+            if (dataType === "@ColumnTypes.Boolean") {
+                show(["default"]);
+            }
+            
+            else if (dataType === "@ColumnTypes.Char") {
+                show(["default", "length"]);
+            }
+            
+            else if (dataType === "@ColumnTypes.Varchar") {
+                show(["default", "length"]);
+            }
+            
+            else if (["@ColumnTypes.Text", "@ColumnTypes.TinyText", "@ColumnTypes.MediumText", "@ColumnTypes.LongText"].indexOf(dataType) > -1) {
+                
+            }
+            
+            else if (["@ColumnTypes.Blob", "@ColumnTypes.TinyBlob", "@ColumnTypes.MediumBlob", "@ColumnTypes.LongBlob"].indexOf(dataType) > -1) {
+               
+            }
+            
+            else if (["@ColumnTypes.Int", "@ColumnTypes.TinyInt", "@ColumnTypes.SmallInt", "@ColumnTypes.MediumInt", "@ColumnTypes.BigInt"].indexOf(dataType) > -1) {
+                show(["default", "length"]);
+            }
+            
+            else if (dataType === "@ColumnTypes.Float" || 
+                    dataType === "@ColumnTypes.Double" || 
+                    dataType === "@ColumnTypes.Decimal"
+            ) {
+                show(["default", "length", "decimals", "ai"]);
+            }
+            
+            else if (dataType === "@ColumnTypes.Date" || 
+                    dataType === "@ColumnTypes.DateTime" || 
+                    dataType === "@ColumnTypes.Time" ||
+                    dataType === "@ColumnTypes.Timestamp"
+                ) {
+                show(["default"]);
+            }
+        });
+        
+        function show(selectors) {
+            var prefix = "#item";
+            selectors.map(function(r) {
+                $(prefix + "-" + r).show();
+            });
+        }
+        
+        function hide(selectors) {
+            var prefix = "#item";
+            selectors.map(function(r) {
+                $(prefix + "-" + r).hide();
+            });
+        }
+        
+        function hideAllInputs() {
+            hide(["default", "ai", "decimals", "length"]);
+        }
+    })
+    
+</script>
+
+<form method="post">
+    
+    <div class="field">
+        <p class="control">
+            <label class="label">Column Type</label>
+            <span class="select">
+                <select
+                    id="column-data-type-select"
+                    style="width: 300px;"
+                    class="input"
+                    asp-for="@Model.DataType"
+                    asp-items="@(new SelectList(ColumnTypes.GetColumns()))">
+                    <option>Choose</option>
+                </select>
+            </span>
+        </p>
+    </div>
+    
+    <div class="field">
+        <label class="label">Column Name</label>
+        <div class="control">
+            <input asp-for="@Model.ColumnName" class="input">
+            <span asp-validation-for="@Model.ColumnName"></span>
+        </div>
+    </div>
+
+
+    <div class="field" id="item-length">
+        <label class="label">Length</label>
+        <div class="control">
+            <input asp-for="@Model.Length" class="input">
+            <span asp-validation-for="@Model.Length"></span>
+        </div>
+    </div>
+
+    <div class="field" id="item-decimals">
+        <label class="label">Decimals</label>
+        <div class="control">
+            <input asp-for="@Model.Decimals" class="input">
+            <span asp-validation-for="@Model.Decimals"></span>
+        </div>
+    </div>
+
+    <div class="field" id="item-default">
+        <label class="label">Default</label>
+        <div class="control">
+            <input asp-for="@Model.Default" class="input">
+            <span asp-validation-for="@Model.Default"></span>
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox" asp-for="@Model.IsNullable">
+                Nullable
+            </label>
+        </div>
+    </div>
+
+    <div class="field" id="item-ai">
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox">
+                Auto Increment
+            </label>
+        </div>
+    </div>
+
+    <div class="field is-grouped">
+        <div class="control">
+            <button class="button is-success is-small" type="submit">
+                Save
+            </button>
+        </div>
+        <div class="control">
+            <button class="button is-small" type="reset">
+                Reset
+            </button>
+        </div>
+    </div>
+</form>

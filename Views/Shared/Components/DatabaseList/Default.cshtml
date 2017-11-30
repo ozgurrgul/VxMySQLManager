@@ -1,0 +1,46 @@
+﻿@model List<string>
+
+@{
+    var selectedDatabase = Context.Request.Query["database"];
+}
+
+<nav class="panel">
+    <p class="panel-heading">
+        Databases
+    </p>
+    <div class="panel-block">
+        <p class="control has-icons-left">
+            <input class="input is-small database-filter-input" type="text" placeholder="filter">
+            <span class="icon is-small is-left">
+                <i class="fa fa-search"></i>
+            </span>
+        </p>
+    </div>
+    
+    <div style="height: 400px !important; overflow-y: scroll;">
+        @foreach(var databaseName in Model)
+        {
+            <a class="panel-block db-item @(databaseName == selectedDatabase ? "is-active" : "")"  href="/Database/Detail?database=@databaseName">
+                <span class="panel-icon">
+                    <i class="fa fa-database"></i>
+                </span>
+                <small>@databaseName</small>
+            </a>
+        }
+    </div>
+</nav>
+
+<script>
+    $(document).ready(function() {
+        $(".database-filter-input").keyup(function(e) {
+            var filterDbName = e.target.value;
+            $("a.db-item").each(function() {
+                if ($(this).text().trim().indexOf(filterDbName) > -1) {
+                    $(this).show()
+                } else {
+                    $(this).hide()
+                }
+            })
+        });
+    })
+</script>

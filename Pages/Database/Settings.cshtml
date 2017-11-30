@@ -1,0 +1,21 @@
+﻿@page
+@model Database.Settings
+
+@{
+    Layout = "_DatabaseLayout";
+    ViewData["Page"] = "Settings";
+    ViewData["Database"] = Model.DatabaseName;
+    ViewData["NotInCard"] = true;
+}
+
+<form method="post">
+   <button class="button is-small is-danger is-outlined"
+            data-confirm="Are you sure to drop database?"
+            asp-page-handler="dropdatabase"
+            asp-route-database="@Model.DatabaseName">
+        <span class="icon is-small">
+            <i class="fa fa-remove"></i>
+        </span>
+        <span>Drop This Database</span>
+    </button>
+</form>

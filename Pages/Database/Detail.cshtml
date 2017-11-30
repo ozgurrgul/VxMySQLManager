@@ -1,0 +1,77 @@
+﻿@page
+@using VxEntityManager
+@model Database.Detail
+
+@{
+    Layout = "_DatabaseLayout";
+    ViewData["Page"] = "Database Detail";
+    ViewData["Database"] = Model.DatabaseName;
+}
+
+<form method="post">
+    <table class="table is-striped is-hoverable is-fullwidth is-narrow">
+        <thead>
+            <tr>
+                <th>Table Name</th>
+                <th>Rows</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var tableName in Model.TableList)
+        {
+            <tr>
+                <td><i class="fa fa-table" aria-hidden="true"></i> @tableName</td>
+                <td>
+                    @* cache rows count by 1 minute *@
+                    <cache expires-after="@TimeSpan.FromMinutes(1)"
+                           vary-by-query="database"
+                           vary-by="@tableName">
+                        @{
+                            var em = new EntityManager(Model.DatabaseName);
+                            var count = await em.CountData(tableName);
+                        }
+                        @count
+                    </cache>
+                </td>
+                <td>
+                    <a class="button is-small"
+                       asp-page="./Table/Structure"
+                       asp-route-database="@Model.DatabaseName"
+                       asp-route-tableName="@tableName">
+                        <span class="icon is-small">
+                            <i class="fa fa-cubes"></i>
+                        </span>
+                        <span>Structure</span>
+                    </a>
+                    <a class="button is-small"
+                       asp-page="./Table/Data"
+                       asp-route-database="@Model.DatabaseName"
+                       asp-route-tableName="@tableName">
+                        <span class="icon is-small">
+                            <i class="fa fa-database"></i>
+                        </span>
+                        <span>Data</span>
+                    </a>
+                    <a class="button is-small"
+                       asp-page="./Table/Detail"
+                       asp-route-database="@Model.DatabaseName"
+                       asp-route-tableName="@tableName">
+                        Detail
+                    </a>
+                    <button class="button is-danger is-small is-outlined"
+                            data-confirm="Are you sure to drop table?"
+                            asp-page-handler="droptable"
+                            asp-route-database="@Model.DatabaseName"
+                            asp-route-tableName="@tableName">
+                        <span class="icon is-small">
+                            <i class="fa fa-remove"></i>
+                        </span>
+                        <span>Drop Table</span>
+                    </button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</form>

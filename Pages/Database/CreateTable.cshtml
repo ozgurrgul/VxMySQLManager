@@ -1,0 +1,56 @@
+﻿@page
+@model Database.CreateTable
+
+@{
+    Layout = "_DatabaseLayout";
+    ViewData["Page"] = "Create Table";
+    ViewData["Database"] = Model.DatabaseName;
+}
+
+<form method="post">
+    <div class="field">
+        <label class="label">Selected Database</label>
+        <div class="control">
+            <input asp-for="@Model.DatabaseName" class="input" readonly>
+        </div>
+    </div>
+    
+    <div class="field">
+        <label class="label">Table Name</label>
+        <div class="control">
+            <input asp-for="@Model.TableName" class="input">
+            <span asp-validation-for="@Model.TableName"></span>
+        </div>
+    </div>
+    
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox" asp-for="@Model.WithPrimaryKey">
+                Create Id primary key column
+            </label>
+        </div>
+    </div>
+    
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox" asp-for="@Model.WithTimestampColumns">
+                Create timestamp columns
+            </label>
+        </div>
+    </div>
+    
+    <div class="field is-grouped">
+        <div class="control">
+            <button class="button is-success is-small" type="submit">
+                Submit
+            </button>
+        </div>
+        <div class="control">
+            <button class="button is-small" type="reset">
+                Reset
+            </button>
+        </div>
+    </div>
+</form>

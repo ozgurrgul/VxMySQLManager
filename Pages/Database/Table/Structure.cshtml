@@ -1,0 +1,76 @@
+﻿@page
+@model Database.Table.Structure
+
+@{
+    Layout = "_DatabaseLayout";
+    ViewData["Page"] = "Table Structure";
+    ViewData["Database"] = Model.DatabaseName;
+    ViewData["Table"] = Model.TableName;
+}
+
+<div>
+    
+    <a class="button is-small is-primary"
+       asp-page="./ColumnAdd"
+       asp-route-database="@Model.DatabaseName"
+       asp-route-tableName="@Model.TableName">
+        Add Column
+    </a>
+    
+    <hr>
+    
+    <form method="post">
+        <table class="table is-striped is-hoverable is-fullwidth is-narrow">
+            <thead>
+            <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Null</th>
+                <th>Key</th>
+                <th>Default</th>
+                <th>Extra</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            @if (Model.TableDescribeRows != null)
+            {
+                <tbody>
+                @foreach (var r in Model.TableDescribeRows)
+                {
+                    <tr>
+                        <td><strong>@r.Field</strong></td>
+                        <td>@r.Type</td>
+                        <td>@r.Null</td>
+                        <td>@r.Key</td>
+                        <td>@r.Default</td>
+                        <td>@r.Extra</td>
+                        <td style="white-space: nowrap;">
+                            <a class="button is-small"
+                               asp-page="./ColumnEdit"
+                               asp-route-database="@Model.DatabaseName"
+                               asp-route-tableName="@Model.TableName"
+                               asp-route-columnName="@r.Field">
+                                <span class="icon is-small">
+                                    <i class="fa fa-edit"></i>
+                                </span>
+                                <span>Edit Column</span>
+                            </a>
+                            <button class="button is-small is-danger"
+                               data-confirm="Are you sure to drop column @r.Field?"
+                               asp-route-database="@Model.DatabaseName"
+                               asp-route-tableName="@Model.TableName"
+                               asp-route-columnName="@r.Field"
+                               asp-page-handler="dropcolumn">
+                                <span class="icon is-small">
+                                    <i class="fa fa-remove"></i>
+                                </span>
+                                <span>Drop</span>
+                            </button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            }
+        </table>
+    </form>
+</div>
