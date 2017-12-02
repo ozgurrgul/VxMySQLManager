@@ -4,6 +4,7 @@ An Asp.NET Core application to manage MySQL database (in development)
 ## Using technologies
 
 * Asp.NET Core 2
+* Razor Pages
 * Bulma CSS && Jquery
 
 ## Some pics
